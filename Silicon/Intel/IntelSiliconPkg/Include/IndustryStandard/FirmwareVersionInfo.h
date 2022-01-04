@@ -3,7 +3,7 @@
 
   @todo update document/spec reference
 
-  Copyright (c) 2016 - 2022, Intel Corporation. All rights reserved.<BR>
+  Copyright (c) 2016, Intel Corporation. All rights reserved.<BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
 @par Specification Reference:
@@ -27,7 +27,7 @@
 typedef struct {
   UINT8                       MajorVersion;
   UINT8                       MinorVersion;
-  UINT16                      Revision;
+  UINT8                       Revision;
   UINT16                      BuildNumber;
 } INTEL_FIRMWARE_VERSION;
 
