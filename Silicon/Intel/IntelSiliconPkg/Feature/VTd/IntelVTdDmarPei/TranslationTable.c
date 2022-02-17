@@ -902,7 +902,7 @@ SetupTranslationTable (
         ASSERT(FALSE);
         Status = EFI_UNSUPPORTED;
       } else {
-        Status = CreateContextEntry (VtdUnitInfo);
+        Status = CreateExtContextEntry (VtdUnitInfo);
       }
     } else {
       if (VtdUnitInfo->ECapReg.Bits.DEP_24) {
