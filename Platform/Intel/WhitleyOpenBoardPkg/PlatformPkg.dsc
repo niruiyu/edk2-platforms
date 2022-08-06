@@ -2,7 +2,7 @@
 # X64 Platform with 64-bit DXE.
 #
 # @copyright
-# Copyright 2008 - 2021 Intel Corporation. <BR>
+# Copyright 2008 - 2022 Intel Corporation. <BR>
 # Copyright (c) 2021, American Megatrends International LLC. <BR>
 #
 # SPDX-License-Identifier: BSD-2-Clause-Patent
@@ -345,7 +345,7 @@
 
 !if $(CPUTARGET) == "ICX"
   gCpuUncoreTokenSpaceGuid.PcdWaSerializationEn|FALSE
-  gEfiCpRcPkgTokenSpaceGuid.PcdMrcCmdVrefCenteringTrainingEnable|FALSE
+  gEfiCpRcPkgTokenSpaceGuid.PcdMrcCmdVrefCenteringTrainingEnable|0
 !endif
 
   gPcAtChipsetPkgTokenSpaceGuid.PcdRtcIndexRegister|0x74
