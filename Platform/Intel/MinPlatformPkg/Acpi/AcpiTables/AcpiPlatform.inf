@@ -93,7 +93,6 @@
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXPmTmrBlkAccessSize
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe0BlkAccessSize
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkAccessSize
-  gMinPlatformPkgTokenSpaceGuid.PcdAcpiXGpe1BlkRegisterBitWidth
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegisterAddressSpaceId
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegisterBitWidth
   gMinPlatformPkgTokenSpaceGuid.PcdAcpiSleepControlRegisterBitOffset
@@ -132,3 +131,5 @@
   gEfiPciRootBridgeIoProtocolGuid     AND
   gEfiVariableArchProtocolGuid        AND
   gEfiVariableWriteArchProtocolGuid
+
+
