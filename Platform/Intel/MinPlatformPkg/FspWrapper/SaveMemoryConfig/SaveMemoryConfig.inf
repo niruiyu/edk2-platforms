@@ -26,7 +26,6 @@
   LargeVariableReadLib
   LargeVariableWriteLib
   BaseLib
-  CompressLib
 
 [Packages]
   MdePkg/MdePkg.dec
@@ -45,9 +44,6 @@
   gFspNonVolatileStorageHobGuid                 ## CONSUMES
   gFspNonVolatileStorageHob2Guid                ## CONSUMES
   gFspNvsBufferVariableGuid                     ## PRODUCES
-
-[Pcd]
-  gMinPlatformPkgTokenSpaceGuid.PcdEnableCompressedFspNvsBuffer
 
 [Depex]
   gEfiVariableArchProtocolGuid        AND
