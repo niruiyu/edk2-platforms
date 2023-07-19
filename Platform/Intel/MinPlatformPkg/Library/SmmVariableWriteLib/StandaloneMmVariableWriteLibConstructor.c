@@ -74,11 +74,7 @@ StandaloneMmVariableWriteLibConstructor (
   //
   // Register VarLibExitBootServicesCallback for gEdkiiSmmExitBootServicesProtocolGuid.
   //
-  Status = gMmst->MmRegisterProtocolNotify (
-                    &gEdkiiSmmExitBootServicesProtocolGuid,
-                    VarLibExitBootServicesCallback,
-                    &Registration
-                    );
+  Status = SmmRegisterProtocolNotify (&gEdkiiSmmExitBootServicesProtocolGuid, VarLibExitBootServicesCallback, &Registration);
   ASSERT_EFI_ERROR (Status);
 
   return Status;
