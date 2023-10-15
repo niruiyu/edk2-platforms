@@ -2,24 +2,24 @@
   IPMI common hook functions
 
   @copyright
-  Copyright 2014 - 2021 Intel Corporation. <BR>
+  Copyright 1999 - 2021 Intel Corporation. <BR>
   Copyright (c) 1985 - 2023, American Megatrends International LLC. <BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 
-#include "IpmiHooks.h"
+#include <ServerManagement.h>
+#include <PeiIpmiHooks.h>
 
 EFI_STATUS
-EFIAPI
-IpmiSendCommand (
-  IN      IPMI_TRANSPORT  *This,
-  IN      UINT8           NetFunction,
-  IN      UINT8           Lun,
-  IN      UINT8           Command,
-  IN      UINT8           *CommandData,
-  IN      UINT32          CommandDataSize,
-  IN OUT  UINT8           *ResponseData,
-  IN OUT  UINT32          *ResponseDataSize
+PeiIpmiSendCommand (
+  IN      PEI_IPMI_TRANSPORT_PPI  *This,
+  IN      UINT8                   NetFunction,
+  IN      UINT8                   Lun,
+  IN      UINT8                   Command,
+  IN      UINT8                   *CommandData,
+  IN      UINT32                  CommandDataSize,
+  IN OUT  UINT8                   *ResponseData,
+  IN OUT  UINT32                  *ResponseDataSize
   )
 
 /*++
@@ -57,22 +57,21 @@ Returns:
   //
   // This Will be unchanged ( BMC/KCS style )
   //
-  return IpmiSendCommandToBmc (
-                               This,
-                               NetFunction,
-                               Lun,
-                               Command,
-                               CommandData,
-                               (UINT8)CommandDataSize,
-                               ResponseData,
-                               (UINT8 *)ResponseDataSize,
-                               NULL
-                               );
+  return PeiIpmiSendCommandToBmc (
+                                  This,
+                                  NetFunction,
+                                  Lun,
+                                  Command,
+                                  CommandData,
+                                  (UINT8)CommandDataSize,
+                                  ResponseData,
+                                  (UINT8 *)ResponseDataSize,
+                                  NULL
+                                  );
 } // IpmiSendCommand()
 
 EFI_STATUS
-EFIAPI
-IpmiSendCommand2 (
+PeiIpmiSendCommand2 (
   IN      IPMI_TRANSPORT2  *This,
   IN      UINT8            NetFunction,
   IN      UINT8            Lun,
@@ -111,36 +110,36 @@ Returns:
 
 --*/
 {
-  IPMI_BMC_INSTANCE_DATA  *IpmiInstance;
+  PEI_IPMI_BMC_INSTANCE_DATA  *PeiIpmiInstance;
 
   if (This == NULL) {
     return EFI_INVALID_PARAMETER;
   }
 
-  IpmiInstance = INSTANCE_FROM_IPMI_TRANSPORT2_THIS (This);
+  PeiIpmiInstance = INSTANCE_FROM_PEI_IPMI_TRANSPORT2_THIS (This);
 
   if ((FixedPcdGet8 (PcdKcsInterfaceSupport) == 1) &&
-      ((IpmiInstance->IpmiTransport2.InterfaceType == SysInterfaceKcs) &&
-       (IpmiInstance->IpmiTransport2.Interface.KcsInterfaceState == IpmiInterfaceInitialized)))
+      ((PeiIpmiInstance->IpmiTransport2Ppi.InterfaceType == SysInterfaceKcs) &&
+       (PeiIpmiInstance->IpmiTransport2Ppi.Interface.KcsInterfaceState == IpmiInterfaceInitialized)))
   {
-    return IpmiSendCommand (
-                            &IpmiInstance->IpmiTransport,
-                            NetFunction,
-                            Lun,
-                            Command,
-                            CommandData,
-                            CommandDataSize,
-                            ResponseData,
-                            ResponseDataSize
-                            );
+    return PeiIpmiSendCommand (
+                               &PeiIpmiInstance->IpmiTransportPpi,
+                               NetFunction,
+                               Lun,
+                               Command,
+                               CommandData,
+                               CommandDataSize,
+                               ResponseData,
+                               ResponseDataSize
+                               );
   }
 
   if ((FixedPcdGet8 (PcdBtInterfaceSupport) == 1) &&
-      ((IpmiInstance->IpmiTransport2.InterfaceType == SysInterfaceBt) &&
-       (IpmiInstance->IpmiTransport2.Interface.Bt.InterfaceState == IpmiInterfaceInitialized)))
+      ((PeiIpmiInstance->IpmiTransport2Ppi.InterfaceType == SysInterfaceBt) &&
+       (PeiIpmiInstance->IpmiTransport2Ppi.Interface.Bt.InterfaceState == IpmiInterfaceInitialized)))
   {
     return IpmiBtSendCommandToBmc (
-                                   &IpmiInstance->IpmiTransport2,
+                                   &PeiIpmiInstance->IpmiTransport2Ppi,
                                    NetFunction,
                                    Lun,
                                    Command,
@@ -153,11 +152,11 @@ Returns:
   }
 
   if ((FixedPcdGet8 (PcdSsifInterfaceSupport) == 1) &&
-      ((IpmiInstance->IpmiTransport2.InterfaceType == SysInterfaceSsif) &&
-       (IpmiInstance->IpmiTransport2.Interface.Ssif.InterfaceState == IpmiInterfaceInitialized)))
+      ((PeiIpmiInstance->IpmiTransport2Ppi.InterfaceType == SysInterfaceSsif) &&
+       (PeiIpmiInstance->IpmiTransport2Ppi.Interface.Ssif.InterfaceState == IpmiInterfaceInitialized)))
   {
     return IpmiSsifSendCommandToBmc (
-                                     &IpmiInstance->IpmiTransport2,
+                                     &PeiIpmiInstance->IpmiTransport2Ppi,
                                      NetFunction,
                                      Lun,
                                      Command,
@@ -170,11 +169,11 @@ Returns:
   }
 
   if ((FixedPcdGet8 (PcdIpmbInterfaceSupport) == 1) &&
-      ((IpmiInstance->IpmiTransport2.InterfaceType == SysInterfaceIpmb) &&
-       (IpmiInstance->IpmiTransport2.Interface.Ipmb.InterfaceState == IpmiInterfaceInitialized)))
+      ((PeiIpmiInstance->IpmiTransport2Ppi.InterfaceType == SysInterfaceIpmb) &&
+       (PeiIpmiInstance->IpmiTransport2Ppi.Interface.Ipmb.InterfaceState == IpmiInterfaceInitialized)))
   {
     return IpmiIpmbSendCommandToBmc (
-                                     &IpmiInstance->IpmiTransport2,
+                                     &PeiIpmiInstance->IpmiTransport2Ppi,
                                      NetFunction,
                                      Lun,
                                      Command,
@@ -187,11 +186,10 @@ Returns:
   }
 
   return EFI_UNSUPPORTED;
-} // IpmiSendCommand2()
+} // IpmiSendCommand()
 
 EFI_STATUS
-EFIAPI
-IpmiSendCommand2Ex (
+PeiIpmiSendCommand2Ex (
   IN      IPMI_TRANSPORT2        *This,
   IN      UINT8                  NetFunction,
   IN      UINT8                  Lun,
@@ -231,34 +229,36 @@ IpmiSendCommand2Ex (
 
   --*/
 
-  IPMI_BMC_INSTANCE_DATA  *IpmiInstance;
+  PEI_IPMI_BMC_INSTANCE_DATA  *PeiIpmiInstance;
 
   if (This == NULL) {
     return EFI_INVALID_PARAMETER;
   }
 
-  IpmiInstance = INSTANCE_FROM_IPMI_TRANSPORT2_THIS (This);
+  PeiIpmiInstance = INSTANCE_FROM_PEI_IPMI_TRANSPORT2_THIS (This);
 
   if ((FixedPcdGet8 (PcdKcsInterfaceSupport) == 1) &&
-      ((InterfaceType == SysInterfaceKcs) && (IpmiInstance->IpmiTransport2.Interface.KcsInterfaceState == IpmiInterfaceInitialized)))
+      ((InterfaceType == SysInterfaceKcs) &&
+       (PeiIpmiInstance->IpmiTransport2Ppi.Interface.KcsInterfaceState == IpmiInterfaceInitialized)))
   {
-    return IpmiSendCommand (
-                            &IpmiInstance->IpmiTransport,
-                            NetFunction,
-                            Lun,
-                            Command,
-                            CommandData,
-                            CommandDataSize,
-                            ResponseData,
-                            ResponseDataSize
-                            );
+    return PeiIpmiSendCommand (
+                               &PeiIpmiInstance->IpmiTransportPpi,
+                               NetFunction,
+                               Lun,
+                               Command,
+                               CommandData,
+                               CommandDataSize,
+                               ResponseData,
+                               ResponseDataSize
+                               );
   }
 
   if ((FixedPcdGet8 (PcdBtInterfaceSupport) == 1) &&
-      ((InterfaceType == SysInterfaceBt) && (IpmiInstance->IpmiTransport2.Interface.Bt.InterfaceState == IpmiInterfaceInitialized)))
+      ((InterfaceType == SysInterfaceBt) &&
+       (PeiIpmiInstance->IpmiTransport2Ppi.Interface.Bt.InterfaceState == IpmiInterfaceInitialized)))
   {
     return IpmiBtSendCommandToBmc (
-                                   &IpmiInstance->IpmiTransport2,
+                                   &PeiIpmiInstance->IpmiTransport2Ppi,
                                    NetFunction,
                                    Lun,
                                    Command,
@@ -271,10 +271,11 @@ IpmiSendCommand2Ex (
   }
 
   if ((FixedPcdGet8 (PcdSsifInterfaceSupport) == 1) &&
-      ((InterfaceType == SysInterfaceSsif) && (IpmiInstance->IpmiTransport2.Interface.Ssif.InterfaceState == IpmiInterfaceInitialized)))
+      ((InterfaceType == SysInterfaceSsif) &&
+       (PeiIpmiInstance->IpmiTransport2Ppi.Interface.Ssif.InterfaceState == IpmiInterfaceInitialized)))
   {
     return IpmiSsifSendCommandToBmc (
-                                     &IpmiInstance->IpmiTransport2,
+                                     &PeiIpmiInstance->IpmiTransport2Ppi,
                                      NetFunction,
                                      Lun,
                                      Command,
@@ -287,10 +288,11 @@ IpmiSendCommand2Ex (
   }
 
   if ((FixedPcdGet8 (PcdIpmbInterfaceSupport) == 1) &&
-      ((InterfaceType == SysInterfaceIpmb) && (IpmiInstance->IpmiTransport2.Interface.Ipmb.InterfaceState == IpmiInterfaceInitialized)))
+      ((InterfaceType == SysInterfaceIpmb) &&
+       (PeiIpmiInstance->IpmiTransport2Ppi.Interface.Ipmb.InterfaceState == IpmiInterfaceInitialized)))
   {
     return IpmiIpmbSendCommandToBmc (
-                                     &IpmiInstance->IpmiTransport2,
+                                     &PeiIpmiInstance->IpmiTransport2Ppi,
                                      NetFunction,
                                      Lun,
                                      Command,
@@ -306,11 +308,11 @@ IpmiSendCommand2Ex (
 }
 
 EFI_STATUS
-EFIAPI
-IpmiGetBmcStatus (
-  IN IPMI_TRANSPORT   *This,
-  OUT BMC_STATUS      *BmcStatus,
-  OUT SM_COM_ADDRESS  *ComAddress
+PeiIpmiBmcStatus (
+  IN  PEI_IPMI_TRANSPORT_PPI  *This,
+  OUT BMC_STATUS              *BmcStatus,
+  OUT SM_COM_ADDRESS          *ComAddress,
+  IN  VOID                    *Context
   )
 
 /*++

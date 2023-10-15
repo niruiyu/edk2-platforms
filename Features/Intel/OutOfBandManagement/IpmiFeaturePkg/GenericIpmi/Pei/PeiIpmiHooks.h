@@ -2,7 +2,7 @@
   IPMI common hook functions head file
 
   @copyright
-  Copyright 2014 - 2021 Intel Corporation. <BR>
+  Copyright 2016 - 2021 Intel Corporation. <BR>
   Copyright (c) 1985 - 2023, American Megatrends International LLC. <BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
@@ -10,36 +10,36 @@
 #ifndef _IPMI_HOOKS_H
 #define _IPMI_HOOKS_H
 
-#include <Protocol/IpmiTransportProtocol.h>
-#include <Protocol/IpmiTransport2Protocol.h>
+#include <Ppi/IpmiTransportPpi.h>
+#include <Ppi/IpmiTransport2Ppi.h>
 #include <Library/BtInterfaceLib.h>
 #include <Library/SsifInterfaceLib.h>
 #include <Library/IpmbInterfaceLib.h>
-#include <Library/DebugLib.h>
-#include <IpmiBmcCommon.h>
-#include <IpmiBmc.h>
+#include <PeiIpmiBmcDef.h>
+#include <PeiIpmiBmc.h>
 
 //
 // Internal(hook) function list
 //
+
 EFI_STATUS
-EFIAPI
-IpmiSendCommand (
-  IN      IPMI_TRANSPORT  *This,
-  IN      UINT8           NetFunction,
-  IN      UINT8           Lun,
-  IN      UINT8           Command,
-  IN      UINT8           *CommandData,
-  IN      UINT32          CommandDataSize,
-  IN OUT  UINT8           *ResponseData,
-  IN OUT  UINT32          *ResponseDataSize
+PeiIpmiSendCommand (
+  IN      PEI_IPMI_TRANSPORT_PPI  *This,
+  IN      UINT8                   NetFunction,
+  IN      UINT8                   Lun,
+  IN      UINT8                   Command,
+  IN      UINT8                   *CommandData,
+  IN      UINT32                  CommandDataSize,
+  IN OUT  UINT8                   *ResponseData,
+  IN OUT  UINT32                  *ResponseDataSize
   )
 
 /*++
 
 Routine Description:
 
-  Send IPMI command to BMC
+  Send Ipmi Command in the right mode: HECI or KCS,  to the
+  appropiate device, ME or BMC.
 
 Arguments:
 
@@ -64,8 +64,7 @@ Returns:
 ;
 
 EFI_STATUS
-EFIAPI
-IpmiSendCommand2 (
+PeiIpmiSendCommand2 (
   IN      IPMI_TRANSPORT2  *This,
   IN      UINT8            NetFunction,
   IN      UINT8            Lun,
@@ -106,8 +105,7 @@ Returns:
 ;
 
 EFI_STATUS
-EFIAPI
-IpmiSendCommand2Ex (
+PeiIpmiSendCommand2Ex (
   IN      IPMI_TRANSPORT2        *This,
   IN      UINT8                  NetFunction,
   IN      UINT8                  Lun,
@@ -117,6 +115,19 @@ IpmiSendCommand2Ex (
   IN OUT  UINT8                  *ResponseData,
   IN OUT  UINT32                 *ResponseDataSize,
   IN      SYSTEM_INTERFACE_TYPE  InterfaceType
+  );
+
+EFI_STATUS
+PeiIpmiSendCommandToBMC (
+  IN      PEI_IPMI_TRANSPORT_PPI  *This,
+  IN      UINT8                   NetFunction,
+  IN      UINT8                   Lun,
+  IN      UINT8                   Command,
+  IN      UINT8                   *CommandData,
+  IN      UINT8                   CommandDataSize,
+  IN OUT  UINT8                   *ResponseData,
+  IN OUT  UINT8                   *ResponseDataSize,
+  IN      VOID                    *Context
   )
 
 /*++
@@ -149,11 +160,11 @@ Returns:
 ;
 
 EFI_STATUS
-EFIAPI
-IpmiGetBmcStatus (
-  IN IPMI_TRANSPORT   *This,
-  OUT BMC_STATUS      *BmcStatus,
-  OUT SM_COM_ADDRESS  *ComAddress
+PeiIpmiBmcStatus (
+  IN  PEI_IPMI_TRANSPORT_PPI  *This,
+  OUT BMC_STATUS              *BmcStatus,
+  OUT SM_COM_ADDRESS          *ComAddress,
+  IN  VOID                    *Context
   )
 
 /*++
@@ -167,6 +178,35 @@ Arguments:
   This        - Pointer to IPMI protocol instance
   BmcStatus   - BMC status
   ComAddress  - Com Address
+  Context     - Context
+
+Returns:
+
+  EFI_SUCCESS - Success
+
+--*/
+;
+
+EFI_STATUS
+IpmiBmcStatus (
+  IN  PEI_IPMI_TRANSPORT_PPI  *This,
+  OUT BMC_STATUS              *BmcStatus,
+  OUT SM_COM_ADDRESS          *ComAddress,
+  IN  VOID                    *Context
+  )
+
+/*++
+
+Routine Description:
+
+  Updates the BMC status and returns the Com Address
+
+Arguments:
+
+  This        - Pointer to IPMI protocol instance
+  BmcStatus   - BMC status
+  ComAddress  - Com Address
+  Context     - Context
 
 Returns:
 
