@@ -630,8 +630,8 @@ InitializeIpmiKcsPhysicalLayer (
     // Check interface data initialized successfully else register notify protocol.
     for (Index = SysInterfaceKcs; Index < SysInterfaceMax; Index++) {
       switch (Index) {
-        case SysInterfaceKcs:
-          if (FixedPcdGet8 (PcdKcsInterfaceSupport) == 1) {
+      if (FixedPcdGet8 (PcdKcsInterfaceSupport) == 1) {
+          case SysInterfaceKcs:
             if ((mIpmiInstance->BmcStatus != BMC_HARDFAIL) && (mIpmiInstance->BmcStatus != BMC_UPDATE_IN_PROGRESS)) {
               BMC_INTERFACE_STATUS  BmcStatus;
               mIpmiInstance->IpmiTransport2.Interface.KcsInterfaceState = IpmiInterfaceInitialized;
@@ -646,19 +646,21 @@ InitializeIpmiKcsPhysicalLayer (
                 mIpmiInstance->IpmiTransport2.Interface.KcsInterfaceState = IpmiInterfaceInitError;
               }
             }
-          }
-          break;
 
-        case SysInterfaceBt:
-          if (FixedPcdGet8 (PcdBtInterfaceSupport) == 1) {
+            break;
+      }
+
+      if (FixedPcdGet8 (PcdBtInterfaceSupport) == 1) {
+          case SysInterfaceBt:
             if (mIpmiInstance->IpmiTransport2.Interface.Bt.InterfaceState == IpmiInterfaceInitialized) {
               InterfaceState = IpmiInterfaceInitialized;
             }
-          }
-          break;
 
-        case SysInterfaceSsif:
-          if (FixedPcdGet8 (PcdSsifInterfaceSupport) == 1) {
+            break;
+      }
+
+      if (FixedPcdGet8 (PcdSsifInterfaceSupport) == 1) {
+          case SysInterfaceSsif:
             if (mIpmiInstance->IpmiTransport2.Interface.Ssif.InterfaceState == IpmiInterfaceInitialized) {
               InterfaceState = IpmiInterfaceInitialized;
             } else if (mIpmiInstance->IpmiTransport2.Interface.Ssif.InterfaceState == IpmiInterfaceInitError) {
@@ -667,11 +669,12 @@ InitializeIpmiKcsPhysicalLayer (
                                                     &mIpmiInstance->IpmiTransport2.Interface.Ssif.SsifInterfaceApiGuid
                                                     );
             }
-          }
-          break;
 
-        case SysInterfaceIpmb:
-          if (FixedPcdGet8 (PcdIpmbInterfaceSupport) == 1) {
+            break;
+      }
+
+      if (FixedPcdGet8 (PcdIpmbInterfaceSupport) == 1) {
+          case SysInterfaceIpmb:
             if (mIpmiInstance->IpmiTransport2.Interface.Ipmb.InterfaceState == IpmiInterfaceInitialized) {
               InterfaceState = IpmiInterfaceInitialized;
             } else if (mIpmiInstance->IpmiTransport2.Interface.Ipmb.InterfaceState == IpmiInterfaceInitError) {
@@ -680,8 +683,9 @@ InitializeIpmiKcsPhysicalLayer (
                                                     &mIpmiInstance->IpmiTransport2.Interface.Ipmb.IpmbInterfaceApiGuid
                                                     );
             }
-          }
-          break;
+
+            break;
+      }
 
         default:
           break;
