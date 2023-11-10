@@ -46,6 +46,8 @@
 
   !include $(PROJECT)/OpenBoardPkgPcd.dsc
   !include AdvancedFeaturePkg/Include/AdvancedFeatures.dsc
+[BuildOptions]
+  DEBUG_*_*_CC_FLAGS  = /Od /Oy-
 
 ################################################################################
 #
@@ -96,7 +98,7 @@
   #######################################
   BootLogoLib|MdeModulePkg/Library/BootLogoLib/BootLogoLib.inf
   CpuExceptionHandlerLib|MdeModulePkg/Library/CpuExceptionHandlerLibNull/CpuExceptionHandlerLibNull.inf
-  S3BootScriptLib|MdeModulePkg/Library/PiDxeS3BootScriptLib/DxeS3BootScriptLib.inf
+  #S3BootScriptLib|MdeModulePkg/Library/PiDxeS3BootScriptLib/DxeS3BootScriptLib.inf
   SerialPortLib|PcAtChipsetPkg/Library/SerialIoLib/SerialIoLib.inf
   StandaloneMmMemLib|StandaloneMmPkg/Library/StandaloneMmMemLib/StandaloneMmMemLib.inf
 
@@ -119,6 +121,17 @@
   PlatformCmosAccessLib|BoardModulePkg/Library/PlatformCmosAccessLibNull/PlatformCmosAccessLibNull.inf
   CmosAccessLib|BoardModulePkg/Library/CmosAccessLib/CmosAccessLib.inf
 
+  FspWrapperPlatformLib|IntelFsp2WrapperPkg/Library/BaseFspWrapperPlatformLibSample/BaseFspWrapperPlatformLibSample.inf
+  FspWrapperHobProcessLib|IntelFsp2WrapperPkg/Library/PeiFspWrapperHobProcessLibSample/PeiFspWrapperHobProcessLibSample.inf
+  FspWrapperApiLib|IntelFsp2WrapperPkg/Library/BaseFspWrapperApiLib/BaseFspWrapperApiLib.inf
+  FspWrapperApiTestLib|IntelFsp2WrapperPkg/Library/PeiFspWrapperApiTestLib/PeiFspWrapperApiTestLib.inf
+  FspMeasurementLib|IntelFsp2WrapperPkg/Library/BaseFspMeasurementLib/BaseFspMeasurementLib.inf
+  FspWrapperPlatformMultiPhaseLib|IntelFsp2WrapperPkg/Library/BaseFspWrapperPlatformMultiPhaseLibNull/BaseFspWrapperPlatformMultiPhaseLibNull.inf
+  FspWrapperMultiPhaseProcessLib|IntelFsp2WrapperPkg/Library/FspWrapperMultiPhaseProcessLib/FspWrapperMultiPhaseProcessLib.inf
+  TcgEventLogRecordLib|SecurityPkg/Library/TcgEventLogRecordLib/TcgEventLogRecordLib.inf
+  HashLib|SecurityPkg/Library/HashLibBaseCryptoRouter/HashLibBaseCryptoRouterPei.inf
+  Tpm2CommandLib|SecurityPkg/Library/Tpm2CommandLib/Tpm2CommandLib.inf
+  Tpm2DeviceLib|SecurityPkg/Library/Tpm2DeviceLibDTpm/Tpm2DeviceLibDTpm.inf
 [LibraryClasses.common.SEC]
   #######################################
   # Edk2 Packages
@@ -202,6 +215,8 @@
   $(PLATFORM_PACKAGE)/PlatformInit/ReportFv/ReportFvPei.inf
   $(PLATFORM_PACKAGE)/PlatformInit/SiliconPolicyPei/SiliconPolicyPeiPreMem.inf
   $(PLATFORM_PACKAGE)/PlatformInit/SiliconPolicyPei/SiliconPolicyPeiPostMem.inf
+  IntelFsp2WrapperPkg/FspmWrapperPeim/FspmWrapperPeim.inf
+  IntelFsp2WrapperPkg/FspsWrapperPeim/FspsWrapperPeim.inf
 
   #######################################
   # Board Package
@@ -249,6 +264,7 @@
   !endif
 !endif
   UefiCpuPkg/CpuDxe/CpuDxe.inf
+  IntelFsp2WrapperPkg/FspWrapperNotifyDxe/FspWrapperNotifyDxe.inf
   !if gMinPlatformPkgTokenSpaceGuid.PcdStandaloneMmEnable == TRUE
     StandaloneMmPkg/Drivers/MmCommunicationDxe/MmCommunicationDxe.inf {
       <LibraryClasses>
