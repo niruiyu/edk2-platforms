@@ -119,6 +119,7 @@
   SiliconPolicyUpdateLib|$(BOARD_PKG)/Policy/Library/SiliconPolicyUpdateLib/SiliconPolicyUpdateLib.inf
   PlatformCmosAccessLib|BoardModulePkg/Library/PlatformCmosAccessLibNull/PlatformCmosAccessLibNull.inf
   CmosAccessLib|BoardModulePkg/Library/CmosAccessLib/CmosAccessLib.inf
+  ShellCEntryLib|ShellPkg/Library/UefiShellCEntryLib/UefiShellCEntryLib.inf
 
 [LibraryClasses.common.SEC]
   #######################################
@@ -300,3 +301,6 @@
   $(BOARD_PKG)/SmbiosPlatformDxe/SmbiosPlatformDxe.inf
   BoardModulePkg/LegacySioDxe/LegacySioDxe.inf
   BoardModulePkg/BoardBdsHookDxe/BoardBdsHookDxe.inf
+
+  ShellPkg/Application/PeriodicTimers/PeriodicTimers.inf
+  MdeModulePkg/Universal/FvSimpleFileSystemDxe/FvSimpleFileSystemDxe.inf

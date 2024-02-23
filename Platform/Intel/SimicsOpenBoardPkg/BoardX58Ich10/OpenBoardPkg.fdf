@@ -236,6 +236,8 @@ INF  ShellPkg/DynamicCommand/DpDynamicCommand/DpDynamicCommand.inf
 #
 INF  SimicsIch10BinPkg/UndiBinary/UndiDxe.inf
 
+INF  ShellPkg/Application/PeriodicTimers/PeriodicTimers.inf
+INF  MdeModulePkg/Universal/FvSimpleFileSystemDxe/FvSimpleFileSystemDxe.inf
 !include MinPlatformPkg/Include/Fdf/CoreSecurityLateInclude.fdf
 
 [FV.FVMAIN_COMPACT]
