@@ -50,7 +50,7 @@
   gUefiCpuPkgTokenSpaceGuid.PcdCpuSmmEnableBspElection|FALSE
   gUefiCpuPkgTokenSpaceGuid.PcdSmmFeatureControlEnable|FALSE
   gUefiCpuPkgTokenSpaceGuid.PcdSmrrEnable|TRUE
-  gMinPlatformPkgTokenSpaceGuid.PcdStandaloneMmEnable|TRUE
+  gMinPlatformPkgTokenSpaceGuid.PcdStandaloneMmEnable|FALSE
 
   ######################################
   # Platform Configuration
