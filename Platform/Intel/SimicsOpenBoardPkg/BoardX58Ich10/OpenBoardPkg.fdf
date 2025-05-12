@@ -186,7 +186,7 @@ INF  MdeModulePkg/Bus/Pci/SataControllerDxe/SataControllerDxe.inf
 INF  UefiCpuPkg/CpuDxe/CpuDxe.inf
 
 !include MinPlatformPkg/Include/Fdf/CoreOsBootInclude.fdf
-!include AdvancedFeaturePkg/Include/PostMemory.fdf
+#!include AdvancedFeaturePkg/Include/PostMemory.fdf
 INF  MdeModulePkg/Universal/Acpi/S3SaveStateDxe/S3SaveStateDxe.inf
 INF  MdeModulePkg/Universal/Acpi/BootScriptExecutorDxe/BootScriptExecutorDxe.inf
 #INF  UefiCpuPkg/CpuS3DataDxe/CpuS3DataDxe.inf

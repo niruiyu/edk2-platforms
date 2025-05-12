@@ -40,14 +40,16 @@
   DEFINE PLATFORMX64_ENABLE             = TRUE
   DEFINE NETWORK_TLS_ENABLE             = FALSE
   DEFINE NETWORK_ISCSI_ENABLE           = FALSE
-  DEFINE NETWORK_ALLOW_HTTP_CONNECTIONS = TRUE
+  DEFINE NETWORK_ALLOW_HTTP_CONNECTIONS = FALSE
+  DEFINE NETWORK_ENABLE                 = FALSE
 
   !include AdvancedFeaturePkg/Include/AdvancedFeaturesPcd.dsc
 
   !include $(PROJECT)/OpenBoardPkgPcd.dsc
   !include AdvancedFeaturePkg/Include/AdvancedFeatures.dsc
 [BuildOptions]
-  DEBUG_*_*_CC_FLAGS  = /Od /Oy-
+  DEBUG_MSVC_*_CC_FLAGS  = /Od /Oy-
+  DEBUG_GCC_*_CC_FLAGS  = -O0 -g
 
 ################################################################################
 #
@@ -304,7 +306,7 @@
   # Silicon Initialization Package
   #######################################
   SimicsIch10BinPkg/UndiBinary/UndiDxe.inf
-  !if gMinPlatformPkgTokenSpaceGuid.PcdBootToShellOnly == FALSE
+  #!if gMinPlatformPkgTokenSpaceGuid.PcdBootToShellOnly == FALSE
     $(PCH_PKG)/SmmControl/RuntimeDxe/SmmControl2Dxe.inf
     IntelSiliconPkg/Feature/SmmAccess/SmmAccessDxe/SmmAccess.inf
     !if gMinPlatformPkgTokenSpaceGuid.PcdStandaloneMmEnable == TRUE
@@ -314,7 +316,7 @@
       $(PCH_PKG)/Spi/Smm/PchSpiSmm.inf
       IntelSiliconPkg/Feature/Flash/SpiFvbService/SpiFvbServiceSmm.inf
     !endif
-  !endif
+  #!endif
 
   #####################################
   # Platform Package
