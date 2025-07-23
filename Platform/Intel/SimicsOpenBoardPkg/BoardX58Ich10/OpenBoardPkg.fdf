@@ -40,36 +40,25 @@ DATA = {
 gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareBase|gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareSize
 #NV_FTW_SPARE
 
-0x00080000|0x0016C000
+$(FSP_S_OFFSET)|$(FSP_S_SIZE)
+gIntelFsp2WrapperTokenSpaceGuid.PcdFspsBaseAddress#|gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspSSize
+# FSP_S Section
+FILE = Build/QemuFspPkg/QEMU_FSP_REBASE_S.fd
+
+$(FSP_M_OFFSET)|$(FSP_M_SIZE)
+gIntelFsp2WrapperTokenSpaceGuid.PcdFspmBaseAddress#|gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspMSize
+# FSP_M Section
+FILE = Build/QemuFspPkg/QEMU_FSP_REBASE_M.fd
+
+$(FSP_T_OFFSET)|$(FSP_T_SIZE)
+gIntelFsp2WrapperTokenSpaceGuid.PcdFsptBaseAddress#|gMinPlatformPkgTokenSpaceGuid.PcdFlashFvFspTSize
+# FSP_T Section
+# FILE = Build/QemuFspPkg/QEMU_FSP_REBASE_T.fd
+
+$(FVMAIN_OFFSET)|$(FVMAIN_SIZE)
 FV = FVMAIN_COMPACT
 
 $(SECFV_OFFSET)|$(SECFV_SIZE)
-FV = FvTempMemorySilicon
-
-#
-# Build the variable store and the firmware code as separate flash device
-# images.
-#
-[FD.SIMICS_VARS]
-BaseAddress   = $(FW_BASE_ADDRESS)
-Size          = 0x80000
-ErasePolarity = 1
-BlockSize     = $(BLOCK_SIZE)
-NumBlocks     = 0x80
-
-!include VarStore.fdf.inc
-
-[FD.SIMICS_CODE]
-BaseAddress   = $(CODE_BASE_ADDRESS)
-Size          = $(CODE_SIZE)
-ErasePolarity = 1
-BlockSize     = $(BLOCK_SIZE)
-NumBlocks     = $(CODE_BLOCKS)
-
-0x00000000|0x0016C000
-FV = FVMAIN_COMPACT
-
-0x0016C000|$(SECFV_SIZE)
 FV = FvTempMemorySilicon
 
 [FD.MEMFD]
@@ -145,7 +134,6 @@ FvNameGuid         = 6522280D-28F9-4131-ADC4-F40EBFA45864
 #  PEI Apriori file example, more PEIM module added later.
 ##
 INF  MdeModulePkg/Core/Pei/PeiMain.inf
-!include $(SKT_PKG)/SktPreMemoryInclude.fdf
 !include $(PCH_PKG)/IchPreMemoryInclude.fdf
 !include MinPlatformPkg/Include/Fdf/CorePreMemoryInclude.fdf
 INF  MinPlatformPkg/PlatformInit/ReportFv/ReportFvPei.inf
@@ -153,7 +141,7 @@ INF  MinPlatformPkg/PlatformInit/PlatformInitPei/PlatformInitPreMem.inf
 INF  MinPlatformPkg/PlatformInit/SiliconPolicyPei/SiliconPolicyPeiPreMem.inf
 !include MinPlatformPkg/Include/Fdf/CoreSecurityPreMemoryInclude.fdf
 !include AdvancedFeaturePkg/Include/PreMemory.fdf
-INF  $(BOARD_PKG)/SimicsPei/SimicsPei.inf
+INF  IntelFsp2WrapperPkg/FspmWrapperPeim/FspmWrapperPeim.inf
 !include $(SKT_PKG)/SktPostMemoryInclude.fdf
 !include $(PCH_PKG)/IchPostMemoryInclude.fdf
 !include MinPlatformPkg/Include/Fdf/CorePostMemoryInclude.fdf
@@ -162,6 +150,10 @@ INF  MinPlatformPkg/PlatformInit/SiliconPolicyPei/SiliconPolicyPeiPostMem.inf
 !include MinPlatformPkg/Include/Fdf/CoreSecurityPostMemoryInclude.fdf
 
 INF  UefiCpuPkg/Universal/Acpi/S3Resume2Pei/S3Resume2Pei.inf
+INF  $(BOARD_PKG)/SimicsPei/SimicsPei.inf
+INF  IntelFsp2WrapperPkg/FspsWrapperPeim/FspsWrapperPeim.inf
+!include $(SKT_PKG)/SktPreMemoryInclude.fdf
+
 # S3 SMM PEI driver
 #INF  UefiCpuPkg/PiSmmCommunication/PiSmmCommunicationPei.inf
 
@@ -194,16 +186,17 @@ INF  MdeModulePkg/Bus/Pci/SataControllerDxe/SataControllerDxe.inf
 INF  UefiCpuPkg/CpuDxe/CpuDxe.inf
 
 !include MinPlatformPkg/Include/Fdf/CoreOsBootInclude.fdf
-!include AdvancedFeaturePkg/Include/PostMemory.fdf
+#!include AdvancedFeaturePkg/Include/PostMemory.fdf
 INF  MdeModulePkg/Universal/Acpi/S3SaveStateDxe/S3SaveStateDxe.inf
 INF  MdeModulePkg/Universal/Acpi/BootScriptExecutorDxe/BootScriptExecutorDxe.inf
-INF  UefiCpuPkg/CpuS3DataDxe/CpuS3DataDxe.inf
+#INF  UefiCpuPkg/CpuS3DataDxe/CpuS3DataDxe.inf
 INF  MdeModulePkg/Universal/PrintDxe/PrintDxe.inf
 INF  MdeModulePkg/Bus/Scsi/ScsiBusDxe/ScsiBusDxe.inf
 INF  MdeModulePkg/Bus/Scsi/ScsiDiskDxe/ScsiDiskDxe.inf
 
 INF  MdeModulePkg/Bus/Ata/AtaAtapiPassThru/AtaAtapiPassThru.inf
 INF  MdeModulePkg/Bus/Ata/AtaBusDxe/AtaBusDxe.inf
+#INF  IntelSiliconPkg/Feature/Flash/SpiFvbService/SpiFvbServiceSmm.inf
 INF  MdeModulePkg/Bus/Pci/NvmExpressDxe/NvmExpressDxe.inf
 INF  BoardModulePkg/LegacySioDxe/LegacySioDxe.inf
 INF  BoardModulePkg/BoardBdsHookDxe/BoardBdsHookDxe.inf
@@ -233,6 +226,7 @@ INF  $(BOARD_PKG)/SimicsDxe/SimicsDxe.inf
 FILE FREEFORM = 7BB28B99-61BB-11D5-9A5D-0090273FC14D {
   SECTION RAW = $(BOARD_PKG)/Logo/Logo.bmp
 }
+INF  IntelFsp2WrapperPkg/FspWrapperNotifyDxe/FspWrapperNotifyDxe.inf
 
 INF  ShellPkg/Application/Shell/Shell.inf
 !if gMinPlatformPkgTokenSpaceGuid.PcdPerformanceEnable == TRUE

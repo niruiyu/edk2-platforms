@@ -340,7 +340,7 @@ MiscInitialization (
   // of IO space. (Side note: unlike other HOBs, the CPU HOB is needed during
   // S3 resume as well, so we build it unconditionally.)
   //
-  BuildCpuHob (mPhysMemAddressWidth, 16);
+  // BuildCpuHob (mPhysMemAddressWidth, 16);
 
   //
   // Determine platform type and save Host Bridge DID to PCD
@@ -612,9 +612,9 @@ InitializePlatform (
     X58TsegMbytesInitialization ();
   }
 
-  PublishPeiMemory ();
+  // PublishPeiMemory ();
 
-  InitializeRamRegions ();
+  // InitializeRamRegions ();
 
   if (mBootMode != BOOT_ON_S3_RESUME) {
     if (!FeaturePcdGet (PcdSmmSmramRequire)) {
